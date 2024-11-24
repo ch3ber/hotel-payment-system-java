@@ -10,10 +10,6 @@ public class LoadENV {
       // Cargar el archivo de propiedades
       properties.load(input);
 
-      // Acceder a las propiedades cargadas
-      String dbUrl = properties.getProperty("DB_URI");
-
-      System.out.println("DB_URI: " + dbUrl);
     } catch (IOException e) {
       e.printStackTrace();
     }
