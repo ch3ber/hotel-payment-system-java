@@ -5,8 +5,8 @@ import java.util.Properties;
 public class LoadENV {
   static Properties properties = new Properties();
 
-  public void load() {
-    try (FileInputStream input = new FileInputStream("config.properties")) {
+  public void load(String path) {
+    try (FileInputStream input = new FileInputStream(path)) {
       // Cargar el archivo de propiedades
       properties.load(input);
 
