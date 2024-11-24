@@ -2,10 +2,9 @@ package employees.infrastructure.persistence;
 
 import java.io.*;
 import java.util.ArrayList;
-import java.util.List;
 
-import employees.application.EmployeeRepository;
 import employees.domain.Employee;
+import employees.domain.EmployeeRepository;
 import employees.domain.Manager;
 import employees.domain.Salesperson;
 import employees.domain.housekeepers.Housekeeper;
@@ -14,7 +13,7 @@ public class DiskEmployeeRepositoryImpl implements EmployeeRepository {
     private static final String FILE_PATH = "src/db/employees.csv";
 
     @Override
-    public void add(Employee employee) {
+    public void save(Employee employee) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_PATH, true))) {
             writer.write(employeeToCSV(employee));
             writer.newLine();
@@ -41,7 +40,7 @@ public class DiskEmployeeRepositoryImpl implements EmployeeRepository {
 
     @Override
     public void update(Employee employee) {
-        List<Employee> employees = findAll();
+        ArrayList<Employee> employees = findAll();
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_PATH))) {
             for (Employee emp : employees) {
                 if (emp.getId() == employee.getId()) {
@@ -58,7 +57,7 @@ public class DiskEmployeeRepositoryImpl implements EmployeeRepository {
 
     @Override
     public void delete(String id) {
-        List<Employee> employees = findAll();
+        ArrayList<Employee> employees = findAll();
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_PATH))) {
             for (Employee emp : employees) {
                 if (!String.valueOf(emp.getId()).equals(id)) {
@@ -72,8 +71,8 @@ public class DiskEmployeeRepositoryImpl implements EmployeeRepository {
     }
 
     @Override
-    public List<Employee> findAll() {
-        List<Employee> employees = new ArrayList<>();
+    public ArrayList<Employee> findAll() {
+        ArrayList<Employee> employees = new ArrayList<>();
         try (BufferedReader reader = new BufferedReader(new FileReader(FILE_PATH))) {
             String line;
             while ((line = reader.readLine()) != null) {
