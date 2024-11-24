@@ -1,5 +1,6 @@
 # ENV vars
 .env
+.properties
 
 # Compiled class file
 *.class
