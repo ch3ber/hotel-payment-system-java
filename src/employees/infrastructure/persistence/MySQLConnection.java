@@ -20,11 +20,12 @@ public class MySQLConnection {
     try {
       Class.forName("com.mysql.cj.jdbc.Driver");
       connection = DriverManager.getConnection(dbUri, dbUser, dbPass);
+      System.out.println("Conexión exitosa a MySQL");
     } catch (ClassNotFoundException e) {
       System.err.println("Driver JDBC no encontrado");
       e.printStackTrace();
     } catch (SQLException e) {
-      System.err.println("Error al conectar con la base de datos");
+      System.err.println("Error al conectar con MySQL");
       e.printStackTrace();
     }
   }
@@ -37,6 +38,7 @@ public class MySQLConnection {
     try {
       if (connection != null && !connection.isClosed()) {
         connection.close();
+        System.out.println("Conexión cerrada");
       }
     } catch (SQLException e) {
       System.err.println("Error al cerrar la conexión");
