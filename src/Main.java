@@ -1,4 +1,8 @@
-import employees.infrastructure.persistence.MySQLConnection;
+import java.util.ArrayList;
+
+import db.infrastructure.MySQLConnection;
+import employees.domain.Employee;
+import employees.domain.Manager;
 import employees.infrastructure.persistence.MySQLEmployeeRepositoryImpl;
 import employees.infrastructure.ui.EmployeesList;
 import utils.LoadENV;
@@ -14,10 +18,12 @@ public class Main {
                 env.getProperty("DB_PASS"));
 
         MySQLEmployeeRepositoryImpl employeeRepository = new MySQLEmployeeRepositoryImpl(mySQLConnectionAccess);
-        employeeRepository.DEV_insert();
+        employeeRepository.save(new Manager(1, "Insert from Main", 1000.0, 200.0));
 
-        // employeeRepository.save(new Manager(1, "John Doe", 1000.0, 200.0));
-        EmployeesList employeesList = new EmployeesList(employeeRepository);
+        ArrayList<Employee> employees = employeeRepository.searchAll();
+        // print employees
+        System.out.println("Employees:" + employees.toString());
+        EmployeesList employeesList = new EmployeesList(employees);
         employeesList.show();
     }
 }

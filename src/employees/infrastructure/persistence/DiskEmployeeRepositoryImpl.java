@@ -23,7 +23,7 @@ public class DiskEmployeeRepositoryImpl implements EmployeeRepository {
     }
 
     @Override
-    public Employee findById(String id) {
+    public Employee search(String id) {
         try (BufferedReader reader = new BufferedReader(new FileReader(FILE_PATH))) {
             String line;
             while ((line = reader.readLine()) != null) {
@@ -40,7 +40,7 @@ public class DiskEmployeeRepositoryImpl implements EmployeeRepository {
 
     @Override
     public void update(Employee employee) {
-        ArrayList<Employee> employees = findAll();
+        ArrayList<Employee> employees = searchAll();
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_PATH))) {
             for (Employee emp : employees) {
                 if (emp.getId() == employee.getId()) {
@@ -57,7 +57,7 @@ public class DiskEmployeeRepositoryImpl implements EmployeeRepository {
 
     @Override
     public void delete(String id) {
-        ArrayList<Employee> employees = findAll();
+        ArrayList<Employee> employees = searchAll();
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_PATH))) {
             for (Employee emp : employees) {
                 if (!String.valueOf(emp.getId()).equals(id)) {
@@ -71,7 +71,7 @@ public class DiskEmployeeRepositoryImpl implements EmployeeRepository {
     }
 
     @Override
-    public ArrayList<Employee> findAll() {
+    public ArrayList<Employee> searchAll() {
         ArrayList<Employee> employees = new ArrayList<>();
         try (BufferedReader reader = new BufferedReader(new FileReader(FILE_PATH))) {
             String line;

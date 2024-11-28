@@ -6,6 +6,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import db.infrastructure.MySQLConnection;
+
 import java.sql.Statement;
 
 import employees.domain.Employee;
@@ -45,18 +47,36 @@ public class MySQLEmployeeRepositoryImpl implements EmployeeRepository {
 
   @Override
   public void save(Employee employee) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'save'");
+    mySQLConnectionAccess.openConnection();
+    Connection connection = mySQLConnectionAccess.getConnection();
+    String templateQuery = "";
+    try {
+      templateQuery = "INSERT INTO employees (name, salary, type, bonus, commission, totalRooms, commissionPerRoom) VALUES (?, ?, ?, ?, ?, ?, ?)";
+      PreparedStatement query = connection.prepareStatement(templateQuery);
+
+      query.setString(1, employee.getName());
+      query.setDouble(2, employee.getSalary());
+      query.setString(3, "Manager");
+      query.setString(4, "999");
+      query.setString(5, "222");
+      query.setString(6, "9");
+      query.setString(7, "9.9");
+      query.execute();
+    } catch (Exception e) {
+      e.printStackTrace();
+    } finally {
+      mySQLConnectionAccess.closeConnection();
+    }
   }
 
   @Override
-  public Employee findById(String id) {
+  public Employee search(String id) {
     // TODO Auto-generated method stub
     throw new UnsupportedOperationException("Unimplemented method 'findById'");
   }
 
   @Override
-  public ArrayList<Employee> findAll() {
+  public ArrayList<Employee> searchAll() {
     ArrayList<Employee> employees = new ArrayList<>();
     String query = "SELECT * FROM employees";
 

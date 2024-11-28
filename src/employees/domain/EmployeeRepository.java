@@ -5,9 +5,9 @@ import java.util.ArrayList;
 public interface EmployeeRepository {
   void save(Employee employee);
 
-  Employee findById(String id);
+  Employee search(String id);
 
-  ArrayList<Employee> findAll();
+  ArrayList<Employee> searchAll();
 
   void update(Employee employee);
 

@@ -2,15 +2,16 @@ package employees.infrastructure.ui;
 
 import javax.swing.*;
 
-import employees.infrastructure.persistence.MySQLEmployeeRepositoryImpl;
+import employees.domain.Employee;
 
 import java.awt.*;
+import java.util.ArrayList;
 
 public class EmployeesList {
-  private MySQLEmployeeRepositoryImpl repository;
+  private ArrayList<Employee> employees;
 
-  public EmployeesList(MySQLEmployeeRepositoryImpl repository) {
-    this.repository = repository;
+  public EmployeesList(ArrayList<Employee> employees) {
+    this.employees = employees;
   }
 
   public void show() {
@@ -20,9 +21,13 @@ public class EmployeesList {
 
     String[] columnNames = { "ID", "Name", "Position" };
 
-    Object[][] data = repository.findAll().stream()
-        .map(employee -> new Object[] { employee.getId(), employee.getName(), employee.getClass().getSimpleName() })
-        .toArray(Object[][]::new);
+    // set employees data
+    Object[][] data = new Object[employees.size()][3];
+    for (int i = 0; i < employees.size(); i++) {
+      data[i][0] = employees.get(i).getId();
+      data[i][1] = employees.get(i).getName();
+      data[i][2] = "Fixed position from list";
+    }
     JTable table = new JTable(data, columnNames);
     JScrollPane scrollPane = new JScrollPane(table);
     table.setFillsViewportHeight(true);
