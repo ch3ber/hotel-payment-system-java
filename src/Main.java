@@ -4,7 +4,7 @@ import db.infrastructure.MySQLConnection;
 import employees.domain.Employee;
 import employees.domain.Manager;
 import employees.infrastructure.persistence.MySQLEmployeeRepositoryImpl;
-import employees.infrastructure.ui.EmployeesList;
+import ui.components.*;
 import utils.LoadENV;
 
 public class Main {
@@ -23,7 +23,11 @@ public class Main {
         ArrayList<Employee> employees = employeeRepository.searchAll();
         // print employees
         System.out.println("Employees:" + employees.toString());
-        EmployeesList employeesList = new EmployeesList(employees);
-        employeesList.show();
+
+        String[] columnNames = { "ID", "Name", "Position" };
+        Table<Employee> employeeTable = new Table<>(employees, columnNames, employee -> new Object[] {
+                employee.getId(), employee.getName(), "Fixed position from list"
+        });
+        employeeTable.show();
     }
 }
