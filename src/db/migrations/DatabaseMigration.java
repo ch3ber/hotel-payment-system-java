@@ -6,7 +6,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-import employees.infrastructure.persistence.MySQLConnection;
+import db.infrastructure.MySQLConnection;
 
 public class DatabaseMigration {
   private MySQLConnection mySQLConnectionAccess;

@@ -1,6 +1,6 @@
 package db.migrations;
 
-import employees.infrastructure.persistence.MySQLConnection;
+import db.infrastructure.MySQLConnection;
 import utils.LoadENV;
 
 public class Main {
