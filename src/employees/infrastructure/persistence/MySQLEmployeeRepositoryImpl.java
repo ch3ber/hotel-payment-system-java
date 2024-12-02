@@ -14,6 +14,10 @@ import employees.domain.Employee;
 import employees.domain.EmployeeRepository;
 import employees.domain.Manager;
 import employees.domain.Salesperson;
+import employees.domain.enums.EmployeeTypes;
+import employees.domain.enums.HousekeeperLevels;
+import employees.domain.housekeepers.Housekeeper;
+import employees.domain.housekeepers.HousekeeperAssistant;
 
 public class MySQLEmployeeRepositoryImpl implements EmployeeRepository {
   private MySQLConnection mySQLConnectionAccess;
@@ -78,7 +82,27 @@ public class MySQLEmployeeRepositoryImpl implements EmployeeRepository {
   @Override
   public ArrayList<Employee> searchAll() {
     ArrayList<Employee> employees = new ArrayList<>();
-    String query = "SELECT * FROM employees";
+    String query = "SELECT" +
+        "  e.id AS empleado_id," +
+        "  e.nombre AS empleado_nombre," +
+        "  e.tipo AS tipo_empleado," +
+        "  e.salario_base," +
+        "  h.nombre AS hotel_nombre," +
+        "  h.nivel_estrellas," +
+        "  COALESCE(g.bono, 0) AS bono," +
+        "  COALESCE(r.nivel_experiencia, '') AS nivel_experiencia," +
+        "  COALESCE(r.total_habitaciones, 0) AS total_habitaciones," +
+        "  COALESCE(v.comision, 0) AS comision" +
+        " FROM" +
+        "    Empleado e" +
+        " LEFT JOIN" +
+        "    Hotel h ON e.hotel_id = h.id" +
+        " LEFT JOIN" +
+        "    Gerente g ON e.id = g.empleado_id" +
+        " LEFT JOIN" +
+        "    Recamarera r ON e.id = r.empleado_id" +
+        " LEFT JOIN" +
+        "    Vendedor v ON e.id = v.empleado_id";
 
     mySQLConnectionAccess.openConnection();
     try (Connection connection = mySQLConnectionAccess.getConnection();
@@ -86,26 +110,34 @@ public class MySQLEmployeeRepositoryImpl implements EmployeeRepository {
         ResultSet resultSet = statement.executeQuery(query)) {
 
       while (resultSet.next()) {
-        int id = resultSet.getInt("id");
-        String name = resultSet.getString("name");
-        double salary = resultSet.getDouble("salary");
-        String type = resultSet.getString("type");
+        int id = resultSet.getInt("empleado_id");
+        String name = resultSet.getString("empleado_nombre");
+        String type = resultSet.getString("tipo_empleado");
+        double salary = resultSet.getDouble("salario_base");
+        String hotelName = resultSet.getString("hotel_nombre");
+        int stars = resultSet.getInt("nivel_estrellas");
+        double bonus = resultSet.getDouble("bono");
+        String experienceLevel = resultSet.getString("nivel_experiencia");
+        int totalRooms = resultSet.getInt("total_habitaciones");
+        double commission = resultSet.getDouble("comision");
 
         Employee employee = null;
-        switch (type) {
-          case "Manager":
-            double bonus = resultSet.getDouble("bonus");
-            employee = new Manager(id, name, salary, bonus);
-            break;
-          case "Salesperson":
-            double commission = resultSet.getDouble("commission");
-            employee = new Salesperson(id, name, salary, commission);
-            break;
-          // case "Housekeeper":
-          // int totalRooms = resultSet.getInt("totalRooms");
-          // double commissionPerRoom = resultSet.getDouble("commissionPerRoom");
-          // employee = new Housekeeper(id, name, salary, totalRooms, commissionPerRoom);
-          // break;
+
+        if (type.equals(EmployeeTypes.MANAGER.getType())) {
+          employee = new Manager(id, name, salary, bonus, 0);
+        }
+
+        if (type.equals(EmployeeTypes.SELLER.getType())) {
+          employee = new Salesperson(id, name, salary, commission, 0);
+        }
+
+        if (type.equals(EmployeeTypes.MAID.getType())) {
+          System.out.println("Nivel de exp: " + experienceLevel);
+          System.out.println(HousekeeperLevels.AMA_DE_LLAVES.getLevel());
+          System.out.println(experienceLevel == "ama de llaves");
+          if (experienceLevel == HousekeeperLevels.AMA_DE_LLAVES.getLevel()) {
+            employee = new Housekeeper(id, name, salary, totalRooms, commission, 0, HousekeeperLevels.AMA_DE_LLAVES);
+          }
         }
 
         if (employee != null) {

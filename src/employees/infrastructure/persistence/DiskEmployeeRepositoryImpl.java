@@ -120,10 +120,10 @@ public class DiskEmployeeRepositoryImpl implements EmployeeRepository {
 
         if (fields.length == 4) {
             double bonus = Double.parseDouble(fields[3]);
-            return new Manager(id, name, salary, bonus);
+            return new Manager(id, name, salary, bonus, id);
         } else if (fields.length == 4) {
             double commission = Double.parseDouble(fields[3]);
-            return new Salesperson(id, name, salary, commission);
+            return new Salesperson(id, name, salary, commission, id);
         } else if (fields.length == 5) {
             // int totalRooms = Integer.parseInt(fields[3]);
             // double commissionPerRoom = Double.parseDouble(fields[4]);

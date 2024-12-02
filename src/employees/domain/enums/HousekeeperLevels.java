@@ -1,6 +1,18 @@
-// enum para definir el tipo de recamarera auxiliar, principiante, experimentada
-// y ama de llavez
+package employees.domain.enums;
 
 public enum HousekeeperLevels {
-  ASSISTANT, BEGINNER, EXPERIENCED, HEAD
+  AUXILIAR("auxiliar"),
+  PRINCIPIANTE("principiante"),
+  EXPERIMENTADA("experimentada"),
+  AMA_DE_LLAVES("ama de llaves");
+
+  private final String level;
+
+  HousekeeperLevels(String level) {
+    this.level = level;
+  }
+
+  public String getLevel() {
+    return level;
+  }
 }

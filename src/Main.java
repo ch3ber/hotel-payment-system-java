@@ -1,6 +1,7 @@
 import db.infrastructure.MySQLConnection;
 import employees.infrastructure.persistence.MySQLEmployeeRepositoryImpl;
 import employees.infrastructure.ui.components.EmployeeTable;
+import rooms.domain.enums.RoomTypes;
 import ui.components.*;
 import utils.LoadENV;
 
@@ -41,16 +42,11 @@ public class Main {
         menu.addButton("Catalogo de empleados", button -> {
             Menu selectHotelMenu = new Menu("Selecciona el hotel de origen", 200, 400);
             selectHotelMenu.addButton("Hotel 1", button1 -> {
-                EmployeeTable.setColumnNames(new String[] { "ID", "Name", "Position" });
-                EmployeeTable.loadEmployeesFrom(new MySQLEmployeeRepositoryImpl(mySQLConnectionAccess));
-                EmployeeTable.show();
-                return null;
-            });
-
-            selectHotelMenu.addButton("Hotel 2", button1 -> {
-                EmployeeTable.setColumnNames(new String[] { "ID", "Name", "Position" });
-                EmployeeTable.loadEmployeesFrom(new MySQLEmployeeRepositoryImpl(mySQLConnectionAccess));
-                EmployeeTable.show();
+                Table table = new Table<>(new MySQLEmployeeRepositoryImpl(mySQLConnectionAccess).searchAll(),
+                        new String[] { "ID", "Nombre", "Tipo", "Salario" },
+                        employee -> new Object[] { employee.getId(),
+                                employee.getName(), employee.getType(), employee.getSalary() });
+                table.show();
                 return null;
             });
 

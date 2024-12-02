@@ -18,7 +18,7 @@ public class EmployeeTable {
     ArrayList<Employee> employees = employeeRepository.searchAll();
 
     employeeTable = new Table<>(employees, columnNames, employee -> new Object[] {
-        employee.getId(), employee.getName(), "Fixed position from EmployeeTable"
+        employee.getId(), employee.getName(), employee.getType(), employee.getHotelId()
     });
   }
 
