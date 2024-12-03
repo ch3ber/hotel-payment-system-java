@@ -29,8 +29,6 @@ public class Main {
         // hotel, habitacion y cantidad de personas.
         // 6. Registrar por dia las comisiones de cada empleado segun la venta
         // registrada.
-        // 7. Mostrar el sueldo mensual, quincenal o semanal de un empleado en
-        // particular.
         // 8. Mostrar las comisiones generadas por dia de un hotel en particular.
         // 9. Mostrar un reporte general de todas las comisiones generadas filtrandolas
         // por un rango de fechas.
