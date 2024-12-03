@@ -1,7 +1,8 @@
+import javax.swing.JOptionPane;
+
 import db.infrastructure.MySQLConnection;
+import employees.domain.Employee;
 import employees.infrastructure.persistence.MySQLEmployeeRepositoryImpl;
-import employees.infrastructure.ui.components.EmployeeTable;
-import rooms.domain.enums.RoomTypes;
 import ui.components.*;
 import utils.LoadENV;
 
@@ -63,6 +64,51 @@ public class Main {
         });
 
         menu.addButton("Catalogo de comisiones", button -> {
+            return null;
+        });
+
+        menu.addButton("Registrar las ventas diarias", button -> {
+            return null;
+        });
+
+        menu.addButton("Registrar por dia las comisiones", button -> {
+            return null;
+        });
+
+        menu.addButton("Mostrar el sueldo mensual", button -> {
+            // input the employee id
+            String id = JOptionPane.showInputDialog("Ingrese el ID del empleado");
+            if (id == null) {
+                return null;
+            }
+
+            // search the employee
+            MySQLEmployeeRepositoryImpl employeeRepository = new MySQLEmployeeRepositoryImpl(mySQLConnectionAccess);
+            Employee employee = employeeRepository.search(id);
+
+            // show the employee
+            if (employee != null) {
+                JOptionPane.showMessageDialog(null,
+                        "El salario de " + employee.getName() + " es de " + employee.getSalary());
+            } else {
+                JOptionPane.showMessageDialog(null, "No se encontro el empleado con el ID " + id);
+            }
+            return null;
+        });
+
+        menu.addButton("Mostrar las comisiones generadas por dia", button -> {
+            return null;
+        });
+
+        menu.addButton("Mostrar un reporte general de todas las comisiones", button -> {
+            return null;
+        });
+
+        menu.addButton("Mostrar un reporte general de todas las ventas", button -> {
+            return null;
+        });
+
+        menu.addButton("Mostrar reporte de los bonos generados mensuales", button -> {
             return null;
         });
 

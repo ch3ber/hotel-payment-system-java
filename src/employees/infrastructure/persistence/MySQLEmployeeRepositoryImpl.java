@@ -75,8 +75,67 @@ public class MySQLEmployeeRepositoryImpl implements EmployeeRepository {
 
   @Override
   public Employee search(String id) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'findById'");
+    Employee employee = null;
+
+    String query = "SELECT" +
+        "  e.id AS empleado_id," +
+        "  e.nombre AS empleado_nombre," +
+        "  e.tipo AS tipo_empleado," +
+        "  e.salario_base," +
+        "  h.nombre AS hotel_nombre," +
+        "  h.nivel_estrellas," +
+        "  COALESCE(g.bono, 0) AS bono," +
+        "  COALESCE(r.nivel_experiencia, '') AS nivel_experiencia," +
+        "  COALESCE(r.total_habitaciones, 0) AS total_habitaciones," +
+        "  COALESCE(v.comision, 0) AS comision" +
+        " FROM" +
+        "    Empleado e" +
+        " LEFT JOIN" +
+        "    Hotel h ON e.hotel_id = h.id" +
+        " LEFT JOIN" +
+        "    Gerente g ON e.id = g.empleado_id" +
+        " LEFT JOIN" +
+        "    Recamarera r ON e.id = r.empleado_id" +
+        " LEFT JOIN" +
+        "    Vendedor v ON e.id = v.empleado_id" +
+        " WHERE e.id = " + id;
+
+    mySQLConnectionAccess.openConnection();
+    try (Connection connection = mySQLConnectionAccess.getConnection();
+        Statement statement = connection.createStatement();
+        ResultSet resultSet = statement.executeQuery(query)) {
+
+      while (resultSet.next()) {
+        String name = resultSet.getString("empleado_nombre");
+        String type = resultSet.getString("tipo_empleado");
+        double salary = resultSet.getDouble("salario_base");
+        String hotelName = resultSet.getString("hotel_nombre");
+        int stars = resultSet.getInt("nivel_estrellas");
+        double bonus = resultSet.getDouble("bono");
+        String experienceLevel = resultSet.getString("nivel_experiencia");
+        int totalRooms = resultSet.getInt("total_habitaciones");
+        double commission = resultSet.getDouble("comision");
+
+        if (type.equals(EmployeeTypes.MANAGER.getType())) {
+          employee = new Manager(Integer.valueOf(id), name, salary, bonus, 0);
+        }
+
+        if (type.equals(EmployeeTypes.SELLER.getType())) {
+          employee = new Salesperson(Integer.valueOf(id), name, salary, commission, 0);
+        }
+
+        if (type.equals(EmployeeTypes.MAID.getType())) {
+          if (experienceLevel.equals(HousekeeperLevels.AMA_DE_LLAVES.getLevel())) {
+            employee = new Housekeeper(Integer.valueOf(id), name, salary, totalRooms, commission, 0,
+                HousekeeperLevels.AMA_DE_LLAVES);
+          }
+        }
+      }
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
+
+    return employee;
   }
 
   @Override
@@ -132,11 +191,9 @@ public class MySQLEmployeeRepositoryImpl implements EmployeeRepository {
         }
 
         if (type.equals(EmployeeTypes.MAID.getType())) {
-          System.out.println("Nivel de exp: " + experienceLevel);
-          System.out.println(HousekeeperLevels.AMA_DE_LLAVES.getLevel());
-          System.out.println(experienceLevel == "ama de llaves");
-          if (experienceLevel == HousekeeperLevels.AMA_DE_LLAVES.getLevel()) {
-            employee = new Housekeeper(id, name, salary, totalRooms, commission, 0, HousekeeperLevels.AMA_DE_LLAVES);
+          if (experienceLevel.equals(HousekeeperLevels.AMA_DE_LLAVES.getLevel())) {
+            employee = new Housekeeper(Integer.valueOf(id), name, salary, totalRooms, commission, 0,
+                HousekeeperLevels.AMA_DE_LLAVES);
           }
         }
 
