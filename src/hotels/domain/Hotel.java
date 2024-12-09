@@ -1,7 +1,5 @@
 package hotels.domain;
 
-import rooms.domain.enums.RoomTypes;
-
 public class Hotel {
   private int id;
   private String name;
@@ -44,13 +42,27 @@ public class Hotel {
     return costPerDayPenhouse;
   }
 
-  public double getCostPerDay(RoomTypes roomTypes) {
-    if (roomTypes == RoomTypes.DOUBLE)
-      return costPerDayDouble;
+  public void setId(int id) {
+    this.id = id;
+  }
 
-    if (roomTypes == RoomTypes.PENTHOUSE)
-      return costPerDayPenhouse;
+  public void setName(String name) {
+    this.name = name;
+  }
 
-    return costPerDaySimple;
+  public void setStars(int stars) {
+    this.stars = stars;
+  }
+
+  public void setCostPerDaySimple(double costPerDaySimple) {
+    this.costPerDaySimple = costPerDaySimple;
+  }
+
+  public void setCostPerDayDouble(double costPerDayDouble) {
+    this.costPerDayDouble = costPerDayDouble;
+  }
+
+  public void setCostPerDayPenhouse(double costPerDayPenhouse) {
+    this.costPerDayPenhouse = costPerDayPenhouse;
   }
 }

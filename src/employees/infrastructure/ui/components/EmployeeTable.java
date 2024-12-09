@@ -3,26 +3,21 @@ package employees.infrastructure.ui.components;
 import java.util.ArrayList;
 
 import employees.domain.Employee;
-import employees.domain.EmployeeRepository;
 import ui.components.Table;
 
-public class EmployeeTable {
-  private static Table<Employee> employeeTable;
-  private static String[] columnNames;
-
-  public static void setColumnNames(String[] columnNames) {
-    EmployeeTable.columnNames = columnNames;
+public class EmployeeTable extends Table {
+  public EmployeeTable(String title, int width, int height) {
+    super(title, width, height);
+    addColumn("ID", 50);
+    addColumn("Nombre", 100);
+    addColumn("Tipo", 100);
+    addColumn("Salario", 100);
+    addColumn("ID Hotel", 50);
   }
 
-  public static void loadEmployeesFrom(EmployeeRepository employeeRepository) {
-    ArrayList<Employee> employees = employeeRepository.searchAll();
-
-    employeeTable = new Table<>(employees, columnNames, employee -> new Object[] {
-        employee.getId(), employee.getName(), employee.getType(), employee.getHotelId()
-    });
-  }
-
-  public static void show() {
-    employeeTable.show();
+  public void setEmployees(ArrayList<Employee> employees) {
+    for (Employee employee : employees) {
+      addRow(employee.getId(), employee.getName(), employee.getType(), employee.getSalary(), employee.getHotelId());
+    }
   }
 }

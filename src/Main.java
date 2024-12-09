@@ -1,9 +1,17 @@
+import java.util.ArrayList;
+
 import javax.swing.JOptionPane;
 
 import db.infrastructure.MySQLConnection;
-import employees.domain.Employee;
+
 import employees.infrastructure.persistence.MySQLEmployeeRepositoryImpl;
+import employees.infrastructure.ui.components.EmployeeTable;
+import employees.application.searchAll.EmployeesInHotelFinder;
+import employees.domain.Employee;
+import employees.domain.EmployeeRepository;
+
 import ui.components.*;
+
 import utils.LoadENV;
 
 public class Main {
@@ -39,17 +47,60 @@ public class Main {
         Menu menu = new Menu("Main Menu", 200, 400);
 
         menu.addButton("Catalogo de empleados", button -> {
-            Menu selectHotelMenu = new Menu("Selecciona el hotel de origen", 200, 400);
-            selectHotelMenu.addButton("Hotel 1", button1 -> {
-                Table table = new Table<>(new MySQLEmployeeRepositoryImpl(mySQLConnectionAccess).searchAll(),
-                        new String[] { "ID", "Nombre", "Tipo", "Salario" },
-                        employee -> new Object[] { employee.getId(),
-                                employee.getName(), employee.getType(), employee.getSalary() });
-                table.show();
+            // 14. El Catalogo consta de las funciones Alta, Baja, Modificacion y Consulta.
+            Menu selectedCRUDOption = new Menu("Selecciona una opcion", 200, 400);
+            selectedCRUDOption.addButton("Alta", button1 -> {
                 return null;
             });
 
-            selectHotelMenu.show();
+            selectedCRUDOption.addButton("Baja", button1 -> {
+                return null;
+            });
+
+            selectedCRUDOption.addButton("Modificacion", button1 -> {
+                return null;
+            });
+
+            selectedCRUDOption.addButton("Consulta", button1 -> {
+                Menu selectedHotelOrigin = new Menu("Selecciona el hotel de origen", 200, 400);
+
+                // get hotel id
+                String hotelId = JOptionPane.showInputDialog("Ingrese el ID del hotel");
+
+                // validate hotel id
+                if (hotelId == null) {
+                    // show info message
+                    JOptionPane.showMessageDialog(null, "No se ingreso un ID de hotel");
+                    return null;
+                }
+
+                // search employees from hotel id using finder
+                EmployeeRepository employeeRepository = new MySQLEmployeeRepositoryImpl(mySQLConnectionAccess);
+                EmployeesInHotelFinder employeesInHotelFinder = new EmployeesInHotelFinder(employeeRepository);
+                int hotelIdInt;
+                try {
+                    hotelIdInt = Integer.parseInt(hotelId);
+                } catch (NumberFormatException e) {
+                    JOptionPane.showMessageDialog(null, "El ID del hotel debe ser un número");
+                    return null;
+                }
+                ArrayList<Employee> employees = employeesInHotelFinder.run(hotelIdInt);
+
+                // show employees
+                if (employees.size() == 0) {
+                    JOptionPane.showMessageDialog(null, "No se encontraron empleados en el hotel con ID " + hotelId);
+                } else {
+                    // show employees in table
+                    EmployeeTable employeeTable = new EmployeeTable("Empleados", 400, 400);
+                    employeeTable.setEmployees(employees);
+                    employeeTable.show();
+                }
+
+                selectedHotelOrigin.show();
+                return null;
+            });
+
+            selectedCRUDOption.show();
             return null;
         });
 
@@ -73,7 +124,7 @@ public class Main {
             return null;
         });
 
-        menu.addButton("Mostrar el sueldo mensual", button -> {
+        menu.addButton("Mostrar el sueldo", button -> {
             // input the employee id
             String id = JOptionPane.showInputDialog("Ingrese el ID del empleado");
             if (id == null) {

@@ -1,36 +1,74 @@
 package ui.components;
 
-import javax.swing.*;
 import java.awt.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.ArrayList;
-import java.util.function.Function;
+import java.util.List;
 
-public class Table<T> {
-  private ArrayList<T> items;
-  private String[] columnNames;
-  private Function<T, Object[]> rowMapper;
+public class Table {
 
-  public Table(ArrayList<T> items, String[] columnNames, Function<T, Object[]> rowMapper) {
-    this.items = items;
-    this.columnNames = columnNames;
-    this.rowMapper = rowMapper;
+  private Frame frame;
+  private Panel panel;
+  private List<String> columnNames;
+  private List<Integer> columnWidths;
+  private List<Object[]> rows;
+
+  public Table(String title, int width, int height) {
+    frame = new Frame(title);
+    frame.setSize(width, height);
+    frame.setLayout(new BorderLayout());
+
+    panel = new Panel();
+    panel.setLayout(new GridLayout(0, 1)); // Dynamic row creation
+
+    columnNames = new ArrayList<>();
+    columnWidths = new ArrayList<>();
+    rows = new ArrayList<>();
+
+    frame.add(panel, BorderLayout.CENTER);
+
+    // Handle window closing
+    frame.addWindowListener(new WindowAdapter() {
+      public void windowClosing(WindowEvent e) {
+        frame.dispose();
+      }
+    });
+  }
+
+  public void addColumn(String name, int width) {
+    columnNames.add(name);
+    columnWidths.add(width);
+  }
+
+  public void addRow(Object... values) {
+    if (values.length != columnNames.size()) {
+      throw new IllegalArgumentException("Row data must match the number of columns.");
+    }
+    rows.add(values);
   }
 
   public void show() {
-    JFrame frame = new JFrame("List");
-    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    frame.setSize(400, 300);
-
-    // set items data
-    Object[][] data = new Object[items.size()][columnNames.length];
-    for (int i = 0; i < items.size(); i++) {
-      data[i] = rowMapper.apply(items.get(i));
+    // Add column headers
+    Panel header = new Panel(new GridLayout(1, columnNames.size()));
+    for (int i = 0; i < columnNames.size(); i++) {
+      Label label = new Label(columnNames.get(i), Label.CENTER);
+      label.setPreferredSize(new Dimension(columnWidths.get(i), 30));
+      header.add(label);
     }
-    JTable table = new JTable(data, columnNames);
-    JScrollPane scrollPane = new JScrollPane(table);
-    table.setFillsViewportHeight(true);
+    panel.add(header);
 
-    frame.getContentPane().add(scrollPane, BorderLayout.CENTER);
+    // Add rows
+    for (Object[] row : rows) {
+      Panel rowPanel = new Panel(new GridLayout(1, columnNames.size()));
+      for (int i = 0; i < row.length; i++) {
+        Label label = new Label(String.valueOf(row[i]), Label.CENTER);
+        label.setPreferredSize(new Dimension(columnWidths.get(i), 30));
+        rowPanel.add(label);
+      }
+      panel.add(rowPanel);
+    }
+
     frame.setVisible(true);
   }
 }

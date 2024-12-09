@@ -17,7 +17,6 @@ import employees.domain.Salesperson;
 import employees.domain.enums.EmployeeTypes;
 import employees.domain.enums.HousekeeperLevels;
 import employees.domain.housekeepers.Housekeeper;
-import employees.domain.housekeepers.HousekeeperAssistant;
 
 public class MySQLEmployeeRepositoryImpl implements EmployeeRepository {
   private MySQLConnection mySQLConnectionAccess;
@@ -26,45 +25,20 @@ public class MySQLEmployeeRepositoryImpl implements EmployeeRepository {
     this.mySQLConnectionAccess = mySQLConnectionAccess;
   }
 
-  public void DEV_insert() {
-    mySQLConnectionAccess.openConnection();
-    Connection connection = mySQLConnectionAccess.getConnection();
-    String templateQuery = "";
-    try {
-      templateQuery = "INSERT INTO employees (name, salary, type, bonus, commission, totalRooms, commissionPerRoom) VALUES (?, ?, ?, ?, ?, ?, ?)";
-      PreparedStatement query = connection.prepareStatement(templateQuery);
-
-      query.setString(1, "Tester");
-      query.setString(2, "123.123");
-      query.setString(3, "Manager");
-      query.setString(4, "111");
-      query.setString(5, "222");
-      query.setString(6, "9");
-      query.setString(7, "9.9");
-      query.execute();
-    } catch (Exception e) {
-      e.printStackTrace();
-    } finally {
-      mySQLConnectionAccess.closeConnection();
-    }
-  }
-
   @Override
   public void save(Employee employee) {
     mySQLConnectionAccess.openConnection();
     Connection connection = mySQLConnectionAccess.getConnection();
     String templateQuery = "";
     try {
-      templateQuery = "INSERT INTO employees (name, salary, type, bonus, commission, totalRooms, commissionPerRoom) VALUES (?, ?, ?, ?, ?, ?, ?)";
+      templateQuery = "INSERT INTO Empleado (nombre, salario_base, tipo, hotel_id) VALUES (?, ?, ?, ?)";
       PreparedStatement query = connection.prepareStatement(templateQuery);
 
       query.setString(1, employee.getName());
       query.setDouble(2, employee.getSalary());
-      query.setString(3, "Manager");
-      query.setString(4, "999");
-      query.setString(5, "222");
-      query.setString(6, "9");
-      query.setString(7, "9.9");
+      query.setString(3, employee.getType());
+      query.setInt(4, employee.getHotelId());
+
       query.execute();
     } catch (Exception e) {
       e.printStackTrace();
@@ -146,8 +120,9 @@ public class MySQLEmployeeRepositoryImpl implements EmployeeRepository {
         "  e.nombre AS empleado_nombre," +
         "  e.tipo AS tipo_empleado," +
         "  e.salario_base," +
-        "  h.nombre AS hotel_nombre," +
-        "  h.nivel_estrellas," +
+        "  COALESCE(h.id, NULL) AS hotel_id," + // Maneja hotel_id como NULL si no aplica
+        "  COALESCE(h.nombre, 'Sin asignar') AS hotel_nombre," +
+        "  COALESCE(h.nivel_estrellas, 0) AS nivel_estrellas," +
         "  COALESCE(g.bono, 0) AS bono," +
         "  COALESCE(r.nivel_experiencia, '') AS nivel_experiencia," +
         "  COALESCE(r.total_habitaciones, 0) AS total_habitaciones," +
@@ -173,6 +148,7 @@ public class MySQLEmployeeRepositoryImpl implements EmployeeRepository {
         String name = resultSet.getString("empleado_nombre");
         String type = resultSet.getString("tipo_empleado");
         double salary = resultSet.getDouble("salario_base");
+        Integer hotelId = resultSet.getInt("hotel_id") != 0 ? resultSet.getInt("hotel_id") : null; // Maneja 0 como NULL
         String hotelName = resultSet.getString("hotel_nombre");
         int stars = resultSet.getInt("nivel_estrellas");
         double bonus = resultSet.getDouble("bono");
@@ -183,18 +159,15 @@ public class MySQLEmployeeRepositoryImpl implements EmployeeRepository {
         Employee employee = null;
 
         if (type.equals(EmployeeTypes.MANAGER.getType())) {
-          employee = new Manager(id, name, salary, bonus, 0);
+          employee = new Manager(id, name, salary, bonus, hotelId);
         }
 
         if (type.equals(EmployeeTypes.SELLER.getType())) {
-          employee = new Salesperson(id, name, salary, commission, 0);
+          employee = new Salesperson(id, name, salary, commission, hotelId);
         }
 
         if (type.equals(EmployeeTypes.MAID.getType())) {
-          if (experienceLevel.equals(HousekeeperLevels.AMA_DE_LLAVES.getLevel())) {
-            employee = new Housekeeper(Integer.valueOf(id), name, salary, totalRooms, commission, 0,
-                HousekeeperLevels.AMA_DE_LLAVES);
-          }
+          employee = new Housekeeper(id, name, salary, totalRooms, commission, hotelId, HousekeeperLevels.PRINCIPIANTE);
         }
 
         if (employee != null) {

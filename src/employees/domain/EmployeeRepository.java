@@ -7,6 +7,8 @@ public interface EmployeeRepository {
 
   Employee search(String id);
 
+  // Employee matching(Criteria criteria);
+
   ArrayList<Employee> searchAll();
 
   void update(Employee employee);
