@@ -20,7 +20,7 @@ public class MySQLConnection {
     try {
       Class.forName("com.mysql.cj.jdbc.Driver");
       connection = DriverManager.getConnection(dbUri, dbUser, dbPass);
-      System.out.println("Open MySQL connection.");
+      System.out.println("[DEBUG]: Open MySQL connection.");
     } catch (ClassNotFoundException e) {
       System.err.println("[ERROR]: Driver JDBC no encontrado.");
       System.err.println("[POSIBLE SOLUTION]: \n\t1. Agregar el driver JDBC a las dependencias del proyecto.");
@@ -41,7 +41,7 @@ public class MySQLConnection {
     try {
       if (connection != null && !connection.isClosed()) {
         connection.close();
-        System.out.println("Close MySQL connection.");
+        System.out.println("[DEBUG]: Close MySQL connection.");
       }
     } catch (SQLException e) {
       System.err.println("[ERROR]: To close MySQL connection.");
