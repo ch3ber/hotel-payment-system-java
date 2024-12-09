@@ -1,28 +1,12 @@
-import java.util.ArrayList;
-
-import javax.swing.JOptionPane;
-
-import db.infrastructure.MySQLConnection;
-
-import employees.infrastructure.persistence.MySQLEmployeeRepositoryImpl;
-import employees.infrastructure.ui.components.EmployeeTable;
-import employees.application.searchAll.EmployeesInHotelFinder;
-import employees.domain.Employee;
-import employees.domain.EmployeeRepository;
-
+import employees.infrastructure.ui.windows.Catalog.EmployeeCatalog;
+import employees.infrastructure.ui.windows.showSalary.ShowSalary;
 import ui.components.*;
-
-import utils.LoadENV;
 
 public class Main {
     public static void main(String[] args) {
-        // load env vars
-        LoadENV env = new LoadENV();
-        env.load(".properties");
-
-        MySQLConnection mySQLConnectionAccess = new MySQLConnection(env.getProperty("DB_URI"),
-                env.getProperty("DB_USER"),
-                env.getProperty("DB_PASS"));
+        int APP_WIDTH = 200;
+        int APP_HEIGHT = 400;
+        String APP_TITLE = "Main Menu";
 
         // menu options
         // 1. Catalogo de empleados: en esta ocación son Gerentes, Recamarera y
@@ -44,63 +28,11 @@ public class Main {
         // rango de fechas.
         // 11. Mostrar reporte de los bonos generados mensuales por gerente.
 
-        Menu menu = new Menu("Main Menu", 200, 400);
+        Menu menu = new Menu(APP_TITLE, APP_WIDTH, APP_HEIGHT);
 
         menu.addButton("Catalogo de empleados", button -> {
-            // 14. El Catalogo consta de las funciones Alta, Baja, Modificacion y Consulta.
-            Menu selectedCRUDOption = new Menu("Selecciona una opcion", 200, 400);
-            selectedCRUDOption.addButton("Alta", button1 -> {
-                return null;
-            });
-
-            selectedCRUDOption.addButton("Baja", button1 -> {
-                return null;
-            });
-
-            selectedCRUDOption.addButton("Modificacion", button1 -> {
-                return null;
-            });
-
-            selectedCRUDOption.addButton("Consulta", button1 -> {
-                Menu selectedHotelOrigin = new Menu("Selecciona el hotel de origen", 200, 400);
-
-                // get hotel id
-                String hotelId = JOptionPane.showInputDialog("Ingrese el ID del hotel");
-
-                // validate hotel id
-                if (hotelId == null) {
-                    // show info message
-                    JOptionPane.showMessageDialog(null, "No se ingreso un ID de hotel");
-                    return null;
-                }
-
-                // search employees from hotel id using finder
-                EmployeeRepository employeeRepository = new MySQLEmployeeRepositoryImpl(mySQLConnectionAccess);
-                EmployeesInHotelFinder employeesInHotelFinder = new EmployeesInHotelFinder(employeeRepository);
-                int hotelIdInt;
-                try {
-                    hotelIdInt = Integer.parseInt(hotelId);
-                } catch (NumberFormatException e) {
-                    JOptionPane.showMessageDialog(null, "El ID del hotel debe ser un número");
-                    return null;
-                }
-                ArrayList<Employee> employees = employeesInHotelFinder.run(hotelIdInt);
-
-                // show employees
-                if (employees.size() == 0) {
-                    JOptionPane.showMessageDialog(null, "No se encontraron empleados en el hotel con ID " + hotelId);
-                } else {
-                    // show employees in table
-                    EmployeeTable employeeTable = new EmployeeTable("Empleados", 400, 400);
-                    employeeTable.setEmployees(employees);
-                    employeeTable.show();
-                }
-
-                selectedHotelOrigin.show();
-                return null;
-            });
-
-            selectedCRUDOption.show();
+            EmployeeCatalog employeeCatalog = new EmployeeCatalog("Catalogo de empleados", APP_WIDTH, APP_HEIGHT);
+            employeeCatalog.show();
             return null;
         });
 
@@ -125,23 +57,8 @@ public class Main {
         });
 
         menu.addButton("Mostrar el sueldo", button -> {
-            // input the employee id
-            String id = JOptionPane.showInputDialog("Ingrese el ID del empleado");
-            if (id == null) {
-                return null;
-            }
-
-            // search the employee
-            MySQLEmployeeRepositoryImpl employeeRepository = new MySQLEmployeeRepositoryImpl(mySQLConnectionAccess);
-            Employee employee = employeeRepository.search(id);
-
-            // show the employee
-            if (employee != null) {
-                JOptionPane.showMessageDialog(null,
-                        "El salario de " + employee.getName() + " es de " + employee.getSalary());
-            } else {
-                JOptionPane.showMessageDialog(null, "No se encontro el empleado con el ID " + id);
-            }
+            ShowSalary showSalary = new ShowSalary();
+            showSalary.show();
             return null;
         });
 
