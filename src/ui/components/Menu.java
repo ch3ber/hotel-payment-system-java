@@ -13,7 +13,7 @@ public class Menu {
   public Menu(String title, int width, int height) {
     this.frame = new JFrame(title);
     this.frame.setSize(width, height);
-    this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    this.frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
     this.frame.setLayout(new BorderLayout());
 
     this.panel = new JPanel();
