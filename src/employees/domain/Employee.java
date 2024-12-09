@@ -15,7 +15,7 @@ package employees.domain;
 // - Vendedor:
 // - Atributo adicional: comisión.
 // - Sobrescribir calcularSalario() para devolver salarioBase + comisionVenta
-public abstract class Employee {
+public class Employee {
   private int id;
   private String name;
   private double salary;
@@ -29,8 +29,6 @@ public abstract class Employee {
     this.type = type;
     this.hotelId = hotelId;
   }
-
-  public abstract double calculateSalary();
 
   public int getId() {
     return id;

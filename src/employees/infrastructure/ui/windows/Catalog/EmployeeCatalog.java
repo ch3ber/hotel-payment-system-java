@@ -24,6 +24,8 @@ public class EmployeeCatalog {
     });
 
     selectedCatalogOption.addButton("Modificacion", button1 -> {
+      UpdateEmployee updateEmployee = new UpdateEmployee();
+      updateEmployee.show();
       return null;
     });
 

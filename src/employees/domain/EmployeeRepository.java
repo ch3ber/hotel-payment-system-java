@@ -11,7 +11,7 @@ public interface EmployeeRepository {
 
   ArrayList<Employee> searchAll();
 
-  void update(Employee employee);
+  boolean update(Employee employee);
 
   void delete(String id);
 }

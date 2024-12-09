@@ -20,7 +20,6 @@ public class Housekeeper extends Employee {
     this.commissionPerRoom = commissionPerRoom;
   }
 
-  @Override
   public double calculateSalary() {
     return getSalary() + (totalRooms * commissionPerRoom);
   }

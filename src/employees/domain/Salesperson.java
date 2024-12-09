@@ -13,7 +13,6 @@ public class Salesperson extends Employee {
     this.salesCommission = commission;
   }
 
-  @Override
   public double calculateSalary() {
     return getSalary() + salesCommission;
   }

@@ -182,9 +182,32 @@ public class MySQLEmployeeRepositoryImpl implements EmployeeRepository {
   }
 
   @Override
-  public void update(Employee employee) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'update'");
+  public boolean update(Employee employee) {
+    String query = "UPDATE Empleado SET " +
+        "nombre = ?, " +
+        "tipo = ?, " +
+        "salario_base = ?, " +
+        "hotel_id = ? " +
+        "WHERE id = ?";
+
+    mySQLConnectionAccess.openConnection();
+    try (Connection connection = mySQLConnectionAccess.getConnection();
+        PreparedStatement statement = connection.prepareStatement(query)) {
+      statement.setString(1, employee.getName());
+      statement.setString(2, employee.getType());
+      statement.setDouble(3, employee.getSalary());
+      statement.setInt(4, employee.getHotelId());
+      statement.setInt(5, employee.getId());
+
+      statement.executeUpdate();
+    } catch (Exception e) {
+      e.printStackTrace();
+      return false;
+    } finally {
+      mySQLConnectionAccess.closeConnection();
+    }
+
+    return true;
   }
 
   @Override
