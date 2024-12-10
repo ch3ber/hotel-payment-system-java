@@ -16,6 +16,8 @@ public class EmployeeCatalog {
   public void show() {
     Menu selectedCatalogOption = new Menu(APP_TITLE, APP_WIDTH, APP_HEIGHT);
     selectedCatalogOption.addButton("Alta", button1 -> {
+      RegisterEmployee registerEmployee = new RegisterEmployee();
+      registerEmployee.show();
       return null;
     });
 
