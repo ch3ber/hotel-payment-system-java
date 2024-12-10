@@ -211,8 +211,63 @@ public class MySQLEmployeeRepositoryImpl implements EmployeeRepository {
   }
 
   @Override
-  public void delete(String id) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'delete'");
+  public boolean delete(String id) {
+    String deletePagosQuery = "DELETE FROM Pago WHERE empleado_id = ?";
+    String deleteComisionQuery = "DELETE FROM Comision WHERE empleado_id = ?";
+    String deleteGerenteQuery = "DELETE FROM Gerente WHERE empleado_id = ?";
+    String deleteRecamareraQuery = "DELETE FROM Recamarera WHERE empleado_id = ?";
+    String deleteVendedorQuery = "DELETE FROM Vendedor WHERE empleado_id = ?";
+    String deleteEmpleadoQuery = "DELETE FROM Empleado WHERE id = ?";
+    boolean isDeleted = false;
+
+    mySQLConnectionAccess.openConnection();
+    try (Connection connection = mySQLConnectionAccess.getConnection()) {
+      connection.setAutoCommit(false);
+
+      try (PreparedStatement deletePagosStmt = connection.prepareStatement(deletePagosQuery);
+          PreparedStatement deleteComisionStmt = connection.prepareStatement(deleteComisionQuery);
+          PreparedStatement deleteGerenteStmt = connection.prepareStatement(deleteGerenteQuery);
+          PreparedStatement deleteRecamareraStmt = connection.prepareStatement(deleteRecamareraQuery);
+          PreparedStatement deleteVendedorStmt = connection.prepareStatement(deleteVendedorQuery);
+          PreparedStatement deleteEmpleadoStmt = connection.prepareStatement(deleteEmpleadoQuery)) {
+
+        // Eliminar registros relacionados en la tabla Pago
+        deletePagosStmt.setString(1, id);
+        deletePagosStmt.executeUpdate();
+
+        // Eliminar registros relacionados en la tabla Comision
+        deleteComisionStmt.setString(1, id);
+        deleteComisionStmt.executeUpdate();
+
+        // Eliminar registros relacionados en la tabla Gerente
+        deleteGerenteStmt.setString(1, id);
+        deleteGerenteStmt.executeUpdate();
+
+        // Eliminar registros relacionados en la tabla Recamarera
+        deleteRecamareraStmt.setString(1, id);
+        deleteRecamareraStmt.executeUpdate();
+
+        // Eliminar registros relacionados en la tabla Vendedor
+        deleteVendedorStmt.setString(1, id);
+        deleteVendedorStmt.executeUpdate();
+
+        // Eliminar el empleado
+        deleteEmpleadoStmt.setString(1, id);
+        int rowsAffected = deleteEmpleadoStmt.executeUpdate();
+        isDeleted = rowsAffected > 0;
+
+        connection.commit();
+      } catch (SQLException e) {
+        connection.rollback();
+        e.printStackTrace();
+      }
+    } catch (SQLException e) {
+      e.printStackTrace();
+    } finally {
+      mySQLConnectionAccess.closeConnection();
+    }
+
+    return isDeleted;
   }
+
 }
