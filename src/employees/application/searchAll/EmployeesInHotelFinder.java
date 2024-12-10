@@ -3,12 +3,12 @@ package employees.application.searchAll;
 import java.util.ArrayList;
 
 import employees.domain.Employee;
-import employees.domain.EmployeeRepository;
+import employees.domain.EmployeesRepository;
 
 public class EmployeesInHotelFinder {
-  private EmployeeRepository employeesRepository;
+  private EmployeesRepository employeesRepository;
 
-  public EmployeesInHotelFinder(EmployeeRepository employeesRepository) {
+  public EmployeesInHotelFinder(EmployeesRepository employeesRepository) {
     this.employeesRepository = employeesRepository;
   }
 

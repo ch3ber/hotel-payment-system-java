@@ -11,14 +11,14 @@ import db.infrastructure.MySQLConnection;
 import java.sql.Statement;
 
 import employees.domain.Employee;
-import employees.domain.EmployeeRepository;
+import employees.domain.EmployeesRepository;
 import employees.domain.Manager;
 import employees.domain.Salesperson;
 import employees.domain.enums.EmployeeTypes;
 import employees.domain.enums.HousekeeperLevels;
 import employees.domain.housekeepers.Housekeeper;
 
-public class MySQLEmployeeRepositoryImpl implements EmployeeRepository {
+public class MySQLEmployeeRepositoryImpl implements EmployeesRepository {
   private MySQLConnection mySQLConnectionAccess;
 
   public MySQLEmployeeRepositoryImpl(MySQLConnection mySQLConnectionAccess) {

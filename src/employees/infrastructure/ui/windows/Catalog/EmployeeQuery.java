@@ -7,7 +7,7 @@ import employees.infrastructure.ui.components.EmployeeTable;
 import ui.components.Menu;
 import employees.application.searchAll.EmployeesInHotelFinder;
 import employees.domain.Employee;
-import employees.domain.EmployeeRepository;
+import employees.domain.EmployeesRepository;
 
 import javax.swing.JOptionPane;
 
@@ -17,7 +17,7 @@ public class EmployeeQuery {
   ArrayList<Employee> employees = new ArrayList<Employee>();
 
   private void fetchEmployeesFromHotel(String hotelId) {
-    EmployeeRepository employeeRepository = new MySQLEmployeeRepositoryImpl(GetMySQLConnection.getConnection());
+    EmployeesRepository employeeRepository = new MySQLEmployeeRepositoryImpl(GetMySQLConnection.getConnection());
     EmployeesInHotelFinder employeesInHotelFinder = new EmployeesInHotelFinder(employeeRepository);
 
     int hotelIdInt;
