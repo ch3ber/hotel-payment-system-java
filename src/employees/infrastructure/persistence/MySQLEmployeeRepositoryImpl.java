@@ -26,10 +26,11 @@ public class MySQLEmployeeRepositoryImpl implements EmployeeRepository {
   }
 
   @Override
-  public void save(Employee employee) {
+  public boolean save(Employee employee) {
     mySQLConnectionAccess.openConnection();
     Connection connection = mySQLConnectionAccess.getConnection();
     String templateQuery = "";
+    boolean isSaved = false;
     try {
       templateQuery = "INSERT INTO Empleado (nombre, salario_base, tipo, hotel_id) VALUES (?, ?, ?, ?)";
       PreparedStatement query = connection.prepareStatement(templateQuery);
@@ -39,12 +40,14 @@ public class MySQLEmployeeRepositoryImpl implements EmployeeRepository {
       query.setString(3, employee.getType());
       query.setInt(4, employee.getHotelId());
 
-      query.execute();
+      int rowsAffected = query.executeUpdate();
+      isSaved = rowsAffected > 0;
     } catch (Exception e) {
       e.printStackTrace();
     } finally {
       mySQLConnectionAccess.closeConnection();
     }
+    return isSaved;
   }
 
   @Override
