@@ -30,19 +30,31 @@ public class RoomCatalog {
     });
 
     selectedCatalogOption.addButton("Eliminar", button1 -> {
-      DeleteRoom deleteRoom = new DeleteRoom();
+      MySQLConnection mySQLConnection = GetMySQLConnection.getConnection();
+      mySQLConnection.openConnection();
+      Connection connection = mySQLConnection.getConnection();
+
+      DeleteRoom deleteRoom = new DeleteRoom(connection);
       deleteRoom.show();
       return null;
     });
 
     selectedCatalogOption.addButton("Modificacion", button1 -> {
-      UpdateRoom updateRoom = new UpdateRoom();
+      MySQLConnection mySQLConnection = GetMySQLConnection.getConnection();
+      mySQLConnection.openConnection();
+      Connection connection = mySQLConnection.getConnection();
+
+      UpdateRoom updateRoom = new UpdateRoom(connection);
       updateRoom.show();
       return null;
     });
 
     selectedCatalogOption.addButton("Consulta", button1 -> {
-      RoomQuery roomQuery = new RoomQuery();
+      MySQLConnection mySQLConnection = GetMySQLConnection.getConnection();
+      mySQLConnection.openConnection();
+      Connection connection = mySQLConnection.getConnection();
+
+      RoomQuery roomQuery = new RoomQuery(connection);
       roomQuery.show();
       return null;
     });
