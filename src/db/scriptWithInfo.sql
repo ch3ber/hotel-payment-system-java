@@ -38,6 +38,7 @@ CREATE TABLE Hotel
     ('sencilla', 'doble', 'penhouse') NOT NULL,
     costo_por_dia DECIMAL
     (10, 2) NOT NULL,
+    ocupada BOOLEAN DEFAULT FALSE,
     FOREIGN KEY
     (hotel_id) REFERENCES Hotel
     (id)
@@ -45,17 +46,17 @@ CREATE TABLE Hotel
 
     -- Datos iniciales para las Habitaciones
     INSERT INTO Habitacion
-      (hotel_id, tipo, costo_por_dia)
+      (hotel_id, tipo, costo_por_dia, ocupada)
     VALUES
-      (1, 'sencilla', 300.00),
-      (1, 'doble', 700.00),
-      (1, 'penhouse', 1200.00),
-      (2, 'sencilla', 360.00),
-      (2, 'doble', 910.00),
-      (2, 'penhouse', 1680.00),
-      (3, 'sencilla', 480.00),
-      (3, 'doble', 1260.00),
-      (3, 'penhouse', 2400.00);
+      (1, 'sencilla', 300.00, FALSE),
+      (1, 'doble', 700.00, FALSE),
+      (1, 'penhouse', 1200.00, FALSE),
+      (2, 'sencilla', 360.00, FALSE),
+      (2, 'doble', 910.00, FALSE),
+      (2, 'penhouse', 1680.00, FALSE),
+      (3, 'sencilla', 480.00, FALSE),
+      (3, 'doble', 1260.00, FALSE),
+      (3, 'penhouse', 2400.00, FALSE);
 
     -- Tabla para Empleados
     CREATE TABLE Empleado

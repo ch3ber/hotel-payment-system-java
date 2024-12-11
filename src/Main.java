@@ -1,5 +1,6 @@
 import employees.infrastructure.ui.windows.Catalog.EmployeeCatalog;
 import employees.infrastructure.ui.windows.showSalary.ShowSalary;
+import rooms.infrastructure.ui.windows.catalog.RoomCatalog;
 import ui.components.*;
 
 public class Main {
@@ -37,6 +38,8 @@ public class Main {
         });
 
         menu.addButton("Catalogo de habitaciones", button -> {
+            RoomCatalog roomCatalog = new RoomCatalog("Catalogo de habitaciones", APP_WIDTH, APP_HEIGHT);
+            roomCatalog.show();
             return null;
         });
 
