@@ -22,6 +22,8 @@ public class EmployeeCatalog {
     });
 
     selectedCatalogOption.addButton("Baja", button1 -> {
+      DeleteEmployee deleteEmployee = new DeleteEmployee();
+      deleteEmployee.show();
       return null;
     });
 
